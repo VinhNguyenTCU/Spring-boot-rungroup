@@ -7,11 +7,8 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.validation.BindingResult;
-import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.*;
 import edu.tcu.cs.rungroup.dto.ClubDto;
-import org.springframework.web.bind.annotation.ModelAttribute;
-import org.springframework.web.bind.annotation.PathVariable;
-import org.springframework.web.bind.annotation.PostMapping;
 
 import java.util.List;
 
@@ -32,11 +29,31 @@ public class ClubController {
         return "clubs-list";
     }
 
+    @GetMapping("/clubs/{clubID}")
+    public String clubDetail(@PathVariable("clubID") Long clubID, Model model){
+        ClubDto clubDto = clubService.findClubById(clubID);
+        model.addAttribute("club", clubDto);
+        return "clubs-detail";
+    }
+
     @GetMapping("/clubs/new")
     public String createClubForm(Model model){
         Club club = new Club();
         model.addAttribute("club", club);
         return "clubs-create";
+    }
+
+    @GetMapping("/clubs/{clubId}/delete")
+    public String deleteClub(@PathVariable("clubId") Long clubID){
+        clubService.delete(clubID);
+        return "redirect:/clubs";
+    }
+
+    @GetMapping("/clubs/search")
+    public String searchClubs(@RequestParam(value = "query") String query, Model model){
+        List<ClubDto> clubs = clubService.searchClubs(query);
+        model.addAttribute("clubs", clubs);
+        return "clubs-list";
     }
 
     @PostMapping("/clubs/new")

@@ -6,6 +6,8 @@ import org.hibernate.annotations.CreationTimestamp;
 import org.hibernate.annotations.UpdateTimestamp;
 
 import java.time.LocalDateTime;
+import java.util.HashSet;
+import java.util.Set;
 
 @Data
 @Getter
@@ -27,5 +29,9 @@ public class Club {
     private LocalDateTime createOn;
     @UpdateTimestamp
     private LocalDateTime updateOn;
+
+    @OneToMany(mappedBy = "club", cascade = CascadeType.REMOVE)
+    private Set<Event> events = new HashSet<>();
+
     
 }
